@@ -1,0 +1,4 @@
+2025-07-22 01:01:27,346 - ai_news_agent - INFO - utils.py:45 - This is an informational message.
+2025-07-22 01:01:27,346 - ai_news_agent - WARNING - utils.py:46 - This is a warning message.
+2025-07-22 01:01:27,347 - ai_news_agent - ERROR - utils.py:47 - This is an error message.
+2025-07-22 01:01:27,347 - ai_news_agent.research_agent - INFO - utils.py:52 - Research agent started gathering data.
