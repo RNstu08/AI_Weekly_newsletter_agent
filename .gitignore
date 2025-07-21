@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python/
+env/
+venv/
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+
+# Environment variables
+.env
+.DS_Store
+
+# Data directories (temporary and persistent)
+data/
+!data/.gitkeep # Keep the data folder structure in git, but ignore contents
+
+# VS Code
+.vscode/
+
+# OS generated files
+.localized
+.Trashes
+Thumbs.db
