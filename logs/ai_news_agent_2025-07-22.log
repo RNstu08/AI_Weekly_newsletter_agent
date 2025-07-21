@@ -13,3 +13,9 @@
 2025-07-22 01:17:45,361 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'latest AI agent development frameworks' completed. Found 3 organic results.
 2025-07-22 01:17:45,373 - ai_news_agent - INFO - serper_dev.py:36 - Performing web search for query: 'nonexistent_topic_xyz_123_abc' (limit: 1)
 2025-07-22 01:17:46,164 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'nonexistent_topic_xyz_123_abc' completed. Found 1 organic results.
+2025-07-22 01:19:19,630 - ai_news_agent - INFO - rss_parser.py:11 - RSSParserTool initialized.
+2025-07-22 01:20:43,069 - ai_news_agent - INFO - rss_parser.py:12 - RSSParserTool initialized.
+2025-07-22 01:20:43,075 - ai_news_agent - INFO - rss_parser.py:24 - Attempting to parse RSS feed: https://news.ycombinator.com/rss
+2025-07-22 01:20:43,860 - ai_news_agent - INFO - rss_parser.py:61 - Successfully parsed 2 articles from RSS feed: https://news.ycombinator.com/rss
+2025-07-22 01:20:43,863 - ai_news_agent - INFO - rss_parser.py:24 - Attempting to parse RSS feed: https://techcrunch.com/feed/
+2025-07-22 01:20:44,045 - ai_news_agent - INFO - rss_parser.py:61 - Successfully parsed 2 articles from RSS feed: https://techcrunch.com/feed/
