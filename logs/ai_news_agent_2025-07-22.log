@@ -178,3 +178,9 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 2025-07-22 01:50:48,274 - ai_news_agent - INFO - curation.py:138 - CURATION AGENT: Generating newsletter outline.
 2025-07-22 01:53:17,053 - ai_news_agent - INFO - curation.py:164 - CURATION AGENT: Successfully generated newsletter outline.
 2025-07-22 01:53:17,053 - ai_news_agent - INFO - curation.py:205 - ---CURATION AGENT: Completed content curation and structuring---
+2025-07-22 01:55:01,588 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 01:57:05,462 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 01:57:05,502 - ai_news_agent - INFO - generation.py:27 - ---GENERATION AGENT: Starting newsletter content generation---
+2025-07-22 01:57:05,537 - ai_news_agent - INFO - generation.py:49 - GENERATION AGENT: Invoking LLM to draft the newsletter content.
+2025-07-22 01:58:22,137 - ai_news_agent - WARNING - generation.py:89 - GENERATION AGENT: Could not extract subject line from LLM response. Using fallback.
+2025-07-22 01:58:22,137 - ai_news_agent - INFO - generation.py:103 - ---GENERATION AGENT: Successfully generated newsletter draft.---
