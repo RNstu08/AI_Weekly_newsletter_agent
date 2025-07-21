@@ -19,3 +19,8 @@
 2025-07-22 01:20:43,860 - ai_news_agent - INFO - rss_parser.py:61 - Successfully parsed 2 articles from RSS feed: https://news.ycombinator.com/rss
 2025-07-22 01:20:43,863 - ai_news_agent - INFO - rss_parser.py:24 - Attempting to parse RSS feed: https://techcrunch.com/feed/
 2025-07-22 01:20:44,045 - ai_news_agent - INFO - rss_parser.py:61 - Successfully parsed 2 articles from RSS feed: https://techcrunch.com/feed/
+2025-07-22 01:21:20,208 - ai_news_agent - INFO - arxiv_search.py:13 - ArxivSearchTool initialized.
+2025-07-22 01:21:20,209 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'LLM agent collaboration' (limit: 2)
+2025-07-22 01:21:21,113 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 2 papers on arXiv for 'LLM agent collaboration'.
+2025-07-22 01:21:21,118 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'nonexistent_research_topic_12345' (limit: 1)
+2025-07-22 01:21:21,483 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 0 papers on arXiv for 'nonexistent_research_topic_12345'.
