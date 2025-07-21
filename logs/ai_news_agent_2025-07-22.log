@@ -159,3 +159,22 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 2025-07-22 01:36:33,448 - ai_news_agent - INFO - extraction.py:37 - EXTRACTION AGENT: Processing article 3/3: A Survey on Autonomous Agents for Scientific Discovery
 2025-07-22 01:36:57,774 - ai_news_agent - INFO - extraction.py:117 - EXTRACTION AGENT: Successfully processed 'A Survey on Autonomous Agents for Scientific Discovery'.
 2025-07-22 01:36:57,774 - ai_news_agent - INFO - extraction.py:148 - ---EXTRACTION AGENT: Completed. Processed 3 articles.---
+2025-07-22 01:47:42,391 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 01:47:42,392 - ai_news_agent - INFO - curation.py:29 - ---CURATION AGENT: Starting content curation and structuring---
+2025-07-22 01:47:42,392 - ai_news_agent - INFO - curation.py:41 - CURATION AGENT: Scoring and categorizing 6 articles.
+2025-07-22 01:47:42,392 - ai_news_agent - INFO - curation.py:43 - CURATION AGENT: Scoring article 1/6: LangGraph New Features: Cycles and Memory
+2025-07-22 01:48:31,490 - ai_news_agent - INFO - curation.py:85 - CURATION AGENT: Scored 'LangGraph New Features: Cycles and Memory' with 0.80, Category: New Frameworks & Tools.
+2025-07-22 01:48:31,490 - ai_news_agent - INFO - curation.py:43 - CURATION AGENT: Scoring article 2/6: AI Ethics in Multi-Agent Systems
+2025-07-22 01:48:59,794 - ai_news_agent - INFO - curation.py:85 - CURATION AGENT: Scored 'AI Ethics in Multi-Agent Systems' with 0.80, Category: Ethical & Societal Impact.
+2025-07-22 01:48:59,794 - ai_news_agent - INFO - curation.py:43 - CURATION AGENT: Scoring article 3/6: A Survey on Autonomous Agents for Scientific Discovery
+2025-07-22 01:49:31,664 - ai_news_agent - INFO - curation.py:85 - CURATION AGENT: Scored 'A Survey on Autonomous Agents for Scientific Discovery' with 0.80, Category: Research & Academic Highlights.
+2025-07-22 01:49:31,664 - ai_news_agent - INFO - curation.py:43 - CURATION AGENT: Scoring article 4/6: Ollama Adds New Llama 3 and Mistral Variants
+2025-07-22 01:50:00,973 - ai_news_agent - INFO - curation.py:85 - CURATION AGENT: Scored 'Ollama Adds New Llama 3 and Mistral Variants' with 0.40, Category: New Frameworks & Tools.
+2025-07-22 01:50:00,974 - ai_news_agent - INFO - curation.py:43 - CURATION AGENT: Scoring article 5/6: AI Job Market Sees Surge in Agent Developer Roles
+2025-07-22 01:50:27,188 - ai_news_agent - INFO - curation.py:85 - CURATION AGENT: Scored 'AI Job Market Sees Surge in Agent Developer Roles' with 0.80, Category: Industry News & Applications.
+2025-07-22 01:50:27,188 - ai_news_agent - INFO - curation.py:43 - CURATION AGENT: Scoring article 6/6: XYZ Phone 15 Pro Max Released
+2025-07-22 01:50:48,274 - ai_news_agent - INFO - curation.py:85 - CURATION AGENT: Scored 'XYZ Phone 15 Pro Max Released' with 0.10, Category: Miscellaneous.
+2025-07-22 01:50:48,274 - ai_news_agent - INFO - curation.py:123 - CURATION AGENT: Selected 4 articles for the newsletter.
+2025-07-22 01:50:48,274 - ai_news_agent - INFO - curation.py:138 - CURATION AGENT: Generating newsletter outline.
+2025-07-22 01:53:17,053 - ai_news_agent - INFO - curation.py:164 - CURATION AGENT: Successfully generated newsletter outline.
+2025-07-22 01:53:17,053 - ai_news_agent - INFO - curation.py:205 - ---CURATION AGENT: Completed content curation and structuring---
