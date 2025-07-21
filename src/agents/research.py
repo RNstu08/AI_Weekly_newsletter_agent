@@ -8,6 +8,7 @@ from src.tools.serper_dev import serper_search_tool # Our web search tool
 from src.tools.rss_parser import rss_parser_tool_instance # Our RSS parser
 from src.tools.arxiv_search import arxiv_search_tool_instance # Our arXiv search tool
 from src.models.research_models import RawArticle # Our Pydantic model for raw articles
+from src.state import AgentState
 
 # Load application settings
 settings = get_settings()
@@ -113,8 +114,15 @@ if __name__ == "__main__":
 
     print("--- Testing Research Agent Node (Standalone) ---")
     
-    # Initialize a dummy state
-    initial_state: AgentState = {"raw_articles": []}
+    # Initialize a dummy state with all required keys from AgentState
+    initial_state: AgentState = {
+        "raw_articles": [],
+        "summarized_content": [], # Initialize new keys
+        "newsletter_outline": None,
+        "newsletter_draft": None,
+        "revision_needed": False,
+        "revision_attempts": 0,
+    }
 
     # Run the research agent node
     updated_state = research_agent_node(initial_state)
