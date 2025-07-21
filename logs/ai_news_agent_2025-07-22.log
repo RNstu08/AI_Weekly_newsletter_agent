@@ -72,3 +72,90 @@
 2025-07-22 01:26:21,248 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'LLM agents' (limit: 1)
 2025-07-22 01:26:21,626 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 1 papers on arXiv for 'LLM agents'.
 2025-07-22 01:26:21,627 - ai_news_agent - INFO - research.py:102 - ---RESEARCH AGENT: Completed. Fetched 20 unique articles.---
+2025-07-22 01:30:45,675 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 01:30:45,676 - ai_news_agent - INFO - extraction.py:24 - ---EXTRACTION AGENT: Starting information extraction and summarization---
+2025-07-22 01:30:45,676 - ai_news_agent - INFO - extraction.py:36 - EXTRACTION AGENT: Processing article 1/3: LangGraph New Features: Cycles and Memory
+2025-07-22 01:31:34,158 - ai_news_agent - ERROR - extraction.py:101 - EXTRACTION AGENT: Failed to parse JSON from LLM response for 'LangGraph New Features: Cycles and Memory': Expecting value: line 1 column 1 (char 0). Raw response: Here is the analysis of the article:
+
+```json
+{
+  "summary": "LangGraph updates with explicit cycles and memory management for complex multi-agent conversations and long-term context retention.",
+  "key_entities": "LangGraph",
+  "trends_identified": "autonomous AI, continuous learning, adaptability"
+}
+```
+
+Let me know if you'd like me to clarify or expand on this response!...
+Traceback (most recent call last):
+  File "D:\Machine_learning\Projects\newsletter\ai-news-agent\src\agents\extraction.py", line 70, in extraction_agent_node
+    parsed_llm_output = json.loads(json_str)
+                        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ranji\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ranji\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ranji\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2025-07-22 01:31:34,481 - ai_news_agent - INFO - extraction.py:36 - EXTRACTION AGENT: Processing article 2/3: AI Ethics in Multi-Agent Systems
+2025-07-22 01:32:11,022 - ai_news_agent - ERROR - extraction.py:101 - EXTRACTION AGENT: Failed to parse JSON from LLM response for 'AI Ethics in Multi-Agent Systems': Expecting value: line 1 column 1 (char 0). Raw response: Here is the analysis of the article:
+
+```
+{
+  "summary": "Embedding ethical guidelines into agent architectures and monitoring emergent behaviors in multi-agent systems to ensure fairness, transparency, and accountability.",
+  "key_entities": "multi-agent systems, AI ethics, moral reasoning, value alignment, human-agent cooperation",
+  "trends_identified": "emerging importance of AI ethics in autonomous decision-making processes"
+}
+```
+
+Note: The summary is a concise summary focusing on AI agent...
+Traceback (most recent call last):
+  File "D:\Machine_learning\Projects\newsletter\ai-news-agent\src\agents\extraction.py", line 70, in extraction_agent_node
+    parsed_llm_output = json.loads(json_str)
+                        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ranji\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ranji\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ranji\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2025-07-22 01:32:11,024 - ai_news_agent - INFO - extraction.py:36 - EXTRACTION AGENT: Processing article 3/3: A Survey on Autonomous Agents for Scientific Discovery
+2025-07-22 01:32:44,825 - ai_news_agent - ERROR - extraction.py:101 - EXTRACTION AGENT: Failed to parse JSON from LLM response for 'A Survey on Autonomous Agents for Scientific Discovery': Expecting value: line 1 column 1 (char 0). Raw response: Here is the analysis of the article:
+
+```json
+{
+  "summary": "Autonomous agents accelerating scientific discovery through reinforcement learning and natural language processing",
+  "key_entities": "autonomous agents, reinforcement learning, natural language processing, material science, drug discovery, climate modeling",
+  "trends_identified": "autonomous research, scientific discovery"
+}
+```
+
+In this article, the focus is on autonomous agents that can aid in scientific discovery. The key entiti...
+Traceback (most recent call last):
+  File "D:\Machine_learning\Projects\newsletter\ai-news-agent\src\agents\extraction.py", line 70, in extraction_agent_node
+    parsed_llm_output = json.loads(json_str)
+                        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ranji\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ranji\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\ranji\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2025-07-22 01:32:44,827 - ai_news_agent - INFO - extraction.py:130 - ---EXTRACTION AGENT: Completed. Processed 3 articles.---
+2025-07-22 01:35:26,831 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 01:35:26,832 - ai_news_agent - INFO - extraction.py:25 - ---EXTRACTION AGENT: Starting information extraction and summarization---
+2025-07-22 01:35:26,833 - ai_news_agent - INFO - extraction.py:37 - EXTRACTION AGENT: Processing article 1/3: LangGraph New Features: Cycles and Memory
+2025-07-22 01:36:08,829 - ai_news_agent - INFO - extraction.py:117 - EXTRACTION AGENT: Successfully processed 'LangGraph New Features: Cycles and Memory'.
+2025-07-22 01:36:08,830 - ai_news_agent - INFO - extraction.py:37 - EXTRACTION AGENT: Processing article 2/3: AI Ethics in Multi-Agent Systems
+2025-07-22 01:36:33,447 - ai_news_agent - INFO - extraction.py:117 - EXTRACTION AGENT: Successfully processed 'AI Ethics in Multi-Agent Systems'.
+2025-07-22 01:36:33,448 - ai_news_agent - INFO - extraction.py:37 - EXTRACTION AGENT: Processing article 3/3: A Survey on Autonomous Agents for Scientific Discovery
+2025-07-22 01:36:57,774 - ai_news_agent - INFO - extraction.py:117 - EXTRACTION AGENT: Successfully processed 'A Survey on Autonomous Agents for Scientific Discovery'.
+2025-07-22 01:36:57,774 - ai_news_agent - INFO - extraction.py:148 - ---EXTRACTION AGENT: Completed. Processed 3 articles.---
