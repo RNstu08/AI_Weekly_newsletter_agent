@@ -28,3 +28,47 @@
 2025-07-22 01:22:48,505 - ai_news_agent - INFO - sendgrid_client.py:21 - SendGridClient initialized with sender email: exampledemo8@gmail.com
 2025-07-22 01:22:48,505 - ai_news_agent - INFO - sendgrid_client.py:37 - Attempting to send email to 2 recipients with subject: 'Test AI Agent Newsletter - Phase 3 Step 1'
 2025-07-22 01:22:49,437 - ai_news_agent - INFO - sendgrid_client.py:48 - Email sent successfully! Status Code: 202
+2025-07-22 01:26:10,885 - ai_news_agent - INFO - serper_dev.py:26 - SerperSearchTool initialized.
+2025-07-22 01:26:10,937 - ai_news_agent - INFO - rss_parser.py:12 - RSSParserTool initialized.
+2025-07-22 01:26:10,942 - ai_news_agent - INFO - arxiv_search.py:13 - ArxivSearchTool initialized.
+2025-07-22 01:26:10,973 - ai_news_agent - INFO - research.py:35 - ---RESEARCH AGENT: Starting information gathering---
+2025-07-22 01:26:10,974 - ai_news_agent - INFO - research.py:45 - RESEARCH AGENT: Performing web searches for 8 keywords.
+2025-07-22 01:26:10,982 - ai_news_agent - INFO - serper_dev.py:36 - Performing web search for query: 'AI agent development' (limit: 2)
+2025-07-22 01:26:11,804 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'AI agent development' completed. Found 2 organic results.
+2025-07-22 01:26:11,808 - ai_news_agent - INFO - serper_dev.py:36 - Performing web search for query: 'multi-agent systems' (limit: 2)
+2025-07-22 01:26:12,576 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'multi-agent systems' completed. Found 2 organic results.
+2025-07-22 01:26:12,579 - ai_news_agent - INFO - serper_dev.py:36 - Performing web search for query: 'autonomous agents' (limit: 2)
+2025-07-22 01:26:13,601 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'autonomous agents' completed. Found 2 organic results.
+2025-07-22 01:26:13,603 - ai_news_agent - INFO - serper_dev.py:36 - Performing web search for query: 'langchain' (limit: 2)
+2025-07-22 01:26:14,399 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'langchain' completed. Found 2 organic results.
+2025-07-22 01:26:14,402 - ai_news_agent - INFO - serper_dev.py:36 - Performing web search for query: 'langgraph' (limit: 2)
+2025-07-22 01:26:15,138 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'langgraph' completed. Found 2 organic results.
+2025-07-22 01:26:15,143 - ai_news_agent - INFO - serper_dev.py:36 - Performing web search for query: 'crewai' (limit: 2)
+2025-07-22 01:26:15,790 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'crewai' completed. Found 2 organic results.
+2025-07-22 01:26:15,791 - ai_news_agent - INFO - serper_dev.py:36 - Performing web search for query: 'agentic workflows' (limit: 2)
+2025-07-22 01:26:16,835 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'agentic workflows' completed. Found 2 organic results.
+2025-07-22 01:26:16,836 - ai_news_agent - INFO - serper_dev.py:36 - Performing web search for query: 'LLM agents' (limit: 2)
+2025-07-22 01:26:17,789 - ai_news_agent - INFO - serper_dev.py:52 - Web search for 'LLM agents' completed. Found 2 organic results.
+2025-07-22 01:26:17,789 - ai_news_agent - INFO - research.py:64 - RESEARCH AGENT: Parsing 2 RSS feeds.
+2025-07-22 01:26:17,790 - ai_news_agent - INFO - rss_parser.py:24 - Attempting to parse RSS feed: https://news.ycombinator.com/rss
+2025-07-22 01:26:18,503 - ai_news_agent - INFO - rss_parser.py:61 - Successfully parsed 10 articles from RSS feed: https://news.ycombinator.com/rss
+2025-07-22 01:26:18,503 - ai_news_agent - INFO - rss_parser.py:24 - Attempting to parse RSS feed: https://techcrunch.com/feed/
+2025-07-22 01:26:18,692 - ai_news_agent - INFO - rss_parser.py:61 - Successfully parsed 10 articles from RSS feed: https://techcrunch.com/feed/
+2025-07-22 01:26:18,693 - ai_news_agent - INFO - research.py:82 - RESEARCH AGENT: Searching arXiv for academic papers.
+2025-07-22 01:26:18,693 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'AI agent development' (limit: 1)
+2025-07-22 01:26:19,086 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 1 papers on arXiv for 'AI agent development'.
+2025-07-22 01:26:19,087 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'multi-agent systems' (limit: 1)
+2025-07-22 01:26:19,481 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 1 papers on arXiv for 'multi-agent systems'.
+2025-07-22 01:26:19,482 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'autonomous agents' (limit: 1)
+2025-07-22 01:26:19,836 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 1 papers on arXiv for 'autonomous agents'.
+2025-07-22 01:26:19,837 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'langchain' (limit: 1)
+2025-07-22 01:26:20,164 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 1 papers on arXiv for 'langchain'.
+2025-07-22 01:26:20,165 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'langgraph' (limit: 1)
+2025-07-22 01:26:20,501 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 1 papers on arXiv for 'langgraph'.
+2025-07-22 01:26:20,502 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'crewai' (limit: 1)
+2025-07-22 01:26:20,894 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 1 papers on arXiv for 'crewai'.
+2025-07-22 01:26:20,895 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'agentic workflows' (limit: 1)
+2025-07-22 01:26:21,247 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 1 papers on arXiv for 'agentic workflows'.
+2025-07-22 01:26:21,248 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'LLM agents' (limit: 1)
+2025-07-22 01:26:21,626 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 1 papers on arXiv for 'LLM agents'.
+2025-07-22 01:26:21,627 - ai_news_agent - INFO - research.py:102 - ---RESEARCH AGENT: Completed. Fetched 20 unique articles.---
