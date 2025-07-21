@@ -24,3 +24,7 @@
 2025-07-22 01:21:21,113 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 2 papers on arXiv for 'LLM agent collaboration'.
 2025-07-22 01:21:21,118 - ai_news_agent - INFO - arxiv_search.py:24 - Searching arXiv for papers matching: 'nonexistent_research_topic_12345' (limit: 1)
 2025-07-22 01:21:21,483 - ai_news_agent - INFO - arxiv_search.py:62 - Successfully found 0 papers on arXiv for 'nonexistent_research_topic_12345'.
+2025-07-22 01:21:59,099 - ai_news_agent - INFO - sendgrid_client.py:20 - SendGridClient initialized with sender email: exampledemo8@gmail.com
+2025-07-22 01:22:48,505 - ai_news_agent - INFO - sendgrid_client.py:21 - SendGridClient initialized with sender email: exampledemo8@gmail.com
+2025-07-22 01:22:48,505 - ai_news_agent - INFO - sendgrid_client.py:37 - Attempting to send email to 2 recipients with subject: 'Test AI Agent Newsletter - Phase 3 Step 1'
+2025-07-22 01:22:49,437 - ai_news_agent - INFO - sendgrid_client.py:48 - Email sent successfully! Status Code: 202
