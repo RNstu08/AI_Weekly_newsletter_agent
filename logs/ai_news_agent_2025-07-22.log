@@ -184,3 +184,24 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 2025-07-22 01:57:05,537 - ai_news_agent - INFO - generation.py:49 - GENERATION AGENT: Invoking LLM to draft the newsletter content.
 2025-07-22 01:58:22,137 - ai_news_agent - WARNING - generation.py:89 - GENERATION AGENT: Could not extract subject line from LLM response. Using fallback.
 2025-07-22 01:58:22,137 - ai_news_agent - INFO - generation.py:103 - ---GENERATION AGENT: Successfully generated newsletter draft.---
+2025-07-22 02:02:20,062 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 02:03:39,571 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 02:03:39,572 - ai_news_agent - INFO - generation.py:17 - ---GENERATION AGENT: Starting newsletter content generation---
+2025-07-22 02:03:39,573 - ai_news_agent - INFO - generation.py:37 - GENERATION AGENT: Invoking LLM to draft the newsletter content.
+2025-07-22 02:05:15,834 - ai_news_agent - WARNING - generation.py:71 - GENERATION AGENT: Could not extract specific subject line from LLM response. Using fallback.
+2025-07-22 02:05:16,122 - ai_news_agent - INFO - generation.py:110 - ---GENERATION AGENT: Successfully generated newsletter draft.---
+2025-07-22 02:07:17,394 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 02:07:17,395 - ai_news_agent - INFO - generation.py:17 - ---GENERATION AGENT: Starting newsletter content generation---
+2025-07-22 02:07:17,396 - ai_news_agent - INFO - generation.py:37 - GENERATION AGENT: Invoking LLM to draft the newsletter content.
+2025-07-22 02:08:35,155 - ai_news_agent - INFO - generation.py:90 - GENERATION AGENT: Extracted subject line: 'AI Agent Weekly Digest: 2025-07-22 Top Trends'
+2025-07-22 02:08:35,156 - ai_news_agent - INFO - generation.py:118 - ---GENERATION AGENT: Successfully generated newsletter draft.---
+2025-07-22 02:12:24,817 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 02:12:24,817 - ai_news_agent - INFO - generation.py:17 - ---GENERATION AGENT: Starting newsletter content generation---
+2025-07-22 02:12:24,818 - ai_news_agent - INFO - generation.py:37 - GENERATION AGENT: Invoking LLM to draft the newsletter content.
+2025-07-22 02:13:34,599 - ai_news_agent - INFO - generation.py:85 - GENERATION AGENT: Extracted subject line: 'AI Agent Weekly Digest: 2025-07-22 Top Trends'
+2025-07-22 02:13:34,600 - ai_news_agent - INFO - generation.py:121 - ---GENERATION AGENT: Successfully generated newsletter draft.---
+2025-07-22 02:15:18,702 - ai_news_agent - INFO - llm_interface.py:19 - Initialized Ollama LLM: llama3 at http://localhost:11434
+2025-07-22 02:15:18,703 - ai_news_agent - INFO - generation.py:17 - ---GENERATION AGENT: Starting newsletter content generation---
+2025-07-22 02:15:18,704 - ai_news_agent - INFO - generation.py:37 - GENERATION AGENT: Invoking LLM to draft the newsletter content.
+2025-07-22 02:16:29,281 - ai_news_agent - INFO - generation.py:80 - GENERATION AGENT: Extracted subject line: 'AI Agent Weekly Digest: 2025-07-22 Top Trends'
+2025-07-22 02:16:29,283 - ai_news_agent - INFO - generation.py:129 - ---GENERATION AGENT: Successfully generated newsletter draft.---

@@ -27,10 +27,12 @@ GENERATION_PROMPT = ChatPromptTemplate.from_messages(
             "Generate the full newsletter content in Markdown format. "
             "Start with the subject line, then the introduction, followed by each section, and finally the conclusion. "
             "For each article, include its title, a concise summary, and a link to the original URL. "
-            "Example subject line: 'AI Agent Weekly Digest: YYYY-MM-DD Top Trends'\n"
+            "**DO NOT include the 'Category' field in the article display.**\n" # <--- NEW INSTRUCTION
+            "Example subject line: '# AI Agent Weekly Digest: YYYY-MM-DD Top Trends'\n" # <--- REVISED EXAMPLE (NO 'Subject:')
             "Example article format:\n"
             "### [Article Title](Article URL)\n"
             "- Summary: Article summary\n\n"
+            "**Important:** Your output MUST be valid Markdown. Provide ONLY the Markdown content, nothing else. DO NOT include any preamble like 'Here is the generated newsletter content in Markdown format:' or 'Subject:' before the actual subject heading." # <--- STRONGER INSTRUCTION
         ),
     ]
 )

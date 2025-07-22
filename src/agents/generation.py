@@ -6,8 +6,7 @@ from datetime import datetime
 from src.config import get_settings
 from src.utils import logger
 from src.tools.llm_interface import get_default_llm
-from src.models.newsletter_models import NewsletterOutline, Newsletter # Ensure all models are imported, as you correctly noted
-# from src.models.newsletter_models import NewsletterOutline, Newsletter, NewsletterSection, NewsletterArticle # Already imported from above, but good to be explicit for clarity
+from src.models.newsletter_models import NewsletterOutline, Newsletter, NewsletterSection, NewsletterArticle
 from src.prompts.generation_prompts import GENERATION_PROMPT
 from src.state import AgentState
 
@@ -42,68 +41,87 @@ def generation_agent_node(state: AgentState) -> AgentState:
         )
         response_content = generation_llm.invoke(prompt)
 
-        # --- MORE ROBUST MARKDOWN AND SUBJECT EXTRACTION ---
+        # --- REVISED ROBUST MARKDOWN AND SUBJECT EXTRACTION (FINAL VERSION FOR THIS STAGE) ---
         
-        # 1. Attempt to extract subject first, as it might appear anywhere at the beginning
+        cleaned_content = response_content.strip()
         generated_subject = f"{settings.NEWSLETTER_SUBJECT_PREFIX}{current_date_formatted} Updates" # Default fallback
 
-        # Pattern to find a subject line potentially at the very start of the response,
-        # or inside markdown headings, possibly with our prefix.
-        # This will look for a line that contains the prefix, possibly at the start of the string or after newlines.
-        # We capture the line itself.
+        # Step 1: Aggressively strip all known preambles, postambles, and markdown fences.
+        preamble_and_fence_patterns = [
+            r"^(```(?:markdown)?\s*\n)*", # Optional leading ```markdown or ```, potentially multiple times
+            r"^(Here is the generated newsletter content in Markdown format:[\n\s]*)*",
+            r"^(Here is the analysis of the article:[\n\s]*)*",
+            r"^(Here is your newsletter:[\n\s]*)*",
+            r"^(Sure, here is your newsletter:[\n\s]*)*",
+            r"^(```json\s*\{.*?\}(```)?)\s*\n*", # Any leftover JSON blocks
+            r"^(Please let me know if you need any further assistance.[\n\s]*)*", # Common LLM closing
+            r"^(Let me know if you'd like me to clarify or expand on this response!.*)*$", # From previous runs, can be multiline
+            r"^\s*Subject:[\s\S]*?(?=#\s*AI Agent Weekly Digest:)", # Remove "Subject: [content]" if it precedes the actual # heading
+            r"^\s*Subject:.*?\n+", # Fallback to remove "Subject: [content]" on a single line
+        ]
+        
+        for pattern in preamble_and_fence_patterns:
+            cleaned_content = re.sub(pattern, "", cleaned_content, flags=re.IGNORECASE | re.DOTALL).strip()
+        
+        if cleaned_content.endswith("```"):
+            cleaned_content = cleaned_content[:-len("```")].strip()
+
+        # Step 2: Extract Subject Line from the now-cleaner content
         subject_line_prefix_escaped = re.escape(settings.NEWSLETTER_SUBJECT_PREFIX.strip())
+        
         subject_match = re.search(
-            r"(^|\n)(#+\s*)?(" + subject_line_prefix_escaped + r".*)$", 
-            response_content, 
+            r"^\s*#\s*(" + subject_line_prefix_escaped + r".*?)$", 
+            cleaned_content, 
             re.MULTILINE | re.IGNORECASE
         )
         
         if subject_match:
-            full_subject_line = subject_match.group(3).strip() # Capture group 3 contains the actual subject text after our prefix
-            # Remove Markdown heading characters if present (e.g., "## ")
-            generated_subject = re.sub(r"^#+\s*", "", full_subject_line).strip()
-            
-            # Ensure it starts with the desired prefix if not already
-            if not generated_subject.startswith(settings.NEWSLETTER_SUBJECT_PREFIX.strip()):
-                generated_subject = f"{settings.NEWSLETTER_SUBJECT_PREFIX.strip()}{generated_subject}"
-            
+            generated_subject = subject_match.group(1).strip()
             logger.info(f"GENERATION AGENT: Extracted subject line: '{generated_subject}'")
+            
+            cleaned_content = re.sub(
+                r"^\s*#\s*" + re.escape(generated_subject) + r"\s*\n*", 
+                "", 
+                cleaned_content, 
+                flags=re.MULTILINE | re.IGNORECASE, 
+                count=1
+            ).strip()
         else:
             logger.warning("GENERATION AGENT: Could not extract specific subject line from LLM response. Using fallback.")
             
-        # 2. Extract content markdown, removing code blocks and preamble
-        content_markdown = response_content.strip()
+        # Step 3: Final content cleanup for minor refinements
 
-        # Remove common preamble phrases from LLMs at the start
-        preamble_patterns = [
-            r"^Here is the generated newsletter content in Markdown format:[\n\s]*",
-            r"^Here is the analysis of the article:[\n\s]*", # From previous agent's debug output
-            r"^Here is your newsletter:[\n\s]*",
-            r"^Sure, here is your newsletter:[\n\s]*",
-            r"^(```json\s*\{.*?\}(```)?)\s*\n*", # Remove any leftover JSON blocks from earlier debugging
-            r"^(```markdown)?\s*\n*", # Remove ```markdown or ``` at the very start
-            r"^\s*Subject:.*?\n+", # Remove subject line if it was at the very start and we already extracted it
-            r"^(AI Agent Weekly Digest:.*?\n)+" # Remove fallback subject line if it was also included by LLM
-        ]
-        for pattern in preamble_patterns:
-            content_markdown = re.sub(pattern, "", content_markdown, flags=re.IGNORECASE | re.DOTALL).strip()
-        
-        # Remove ``` at the end if present (from the markdown block)
-        if content_markdown.endswith("```"):
-            content_markdown = content_markdown[:-len("```")].strip()
-        
-        # Remove the extracted subject line from the main content, only if it still exists there
-        # This prevents duplication if the LLM wrote it inside the markdown body
-        if generated_subject.strip() in content_markdown:
-             # Try to remove the first occurrence of the subject line from content markdown
-             content_markdown = content_markdown.replace(generated_subject.strip(), "", 1).strip()
-             # Also remove markdown headers if subject was part of a header, like "## Subject"
-             content_markdown = re.sub(r"^(#+\s*)?" + re.escape(generated_subject.strip()) + r"\n*", "", content_markdown, flags=re.MULTILINE).strip()
+        # 3a. Remove Category lines (e.g., "Category: New Frameworks & Tools")
+        cleaned_content = re.sub(r"^\s*Category:.*$", "", cleaned_content, flags=re.MULTILINE | re.IGNORECASE).strip()
 
+        # 3b. Convert standalone URLs to "[Read More](URL)" markdown links
+        # This targets URLs that are often on their own line or follow a hyphen/bullet point
+        # It ensures we don't accidentally link text that just happens to contain a URL.
+        # This is the most complex regex, and might need careful testing on diverse LLM outputs.
+        # It looks for a URL that is either at the start of a line, or preceded by whitespace/hyphen/bullet.
+        # And followed by end of line or whitespace.
+        cleaned_content = re.sub(
+            r"(^|\n|\s|-|\*)\s*(https?://[^\s\]\)]+)(\s*$|\n)", # Capture preamble, the URL, and postamble
+            r"\1[Read More](\2)\3", # Reconstruct with markdown link, preserving pre/postamble
+            cleaned_content, 
+            flags=re.MULTILINE | re.IGNORECASE
+        ).strip()
+        
+        # Fallback for URLs not caught by the above (e.g., URL is not on its own line)
+        # This is less aggressive, only wraps if it's the very last thing on a line or followed by specific chars.
+        # Or you might omit this if the above is good enough with prompt changes.
+        # cleaned_content = re.sub(r"(https?://\S+)", r"[Read More](\1)", cleaned_content).strip()
+
+
+        # 3c. Remove excessive blank lines (3 or more newlines become 2)
+        cleaned_content = re.sub(r'\n{3,}', '\n\n', cleaned_content).strip()
+        
+        # 3d. Final trim in case of any remaining leading/trailing whitespace
+        content_markdown = cleaned_content.strip()
 
         newsletter_draft = Newsletter(
             date=datetime.now(),
-            subject=generated_subject, # Use the extracted/fallback subject
+            subject=generated_subject,
             content_markdown=content_markdown,
             is_approved=False,
             revision_attempts=state.get('revision_attempts', 0)
@@ -124,7 +142,6 @@ def generation_agent_node(state: AgentState) -> AgentState:
     new_state = state.copy()
     new_state['newsletter_draft'] = newsletter_draft
     return new_state
-
 
 # Example usage (for testing purposes)
 if __name__ == "__main__":
