@@ -35,30 +35,9 @@ class Newsletter(BaseModel):
     date: datetime = Field(default_factory=datetime.now, description="Date of the newsletter.")
     subject: str = Field(..., description="Subject line for the email.")
     content_markdown: str = Field(..., description="Full newsletter content in Markdown format.")
-    content_html: Optional[str] = Field(None, description="Optional: Full newsletter content in HTML format.")
+    content_html: str = Field(..., description="Full newsletter content in HTML format, derived from markdown.") # <--- CHANGED FROM Optional[str] = None
     is_approved: bool = Field(False, description="Whether the newsletter has been approved by the Editorial Agent.")
     approval_score: Optional[float] = Field(None, description="Quality score from the Editorial Agent.")
     feedback: Optional[str] = Field(None, description="Feedback from the Editorial Agent if not approved.")
     revision_attempts: int = Field(0, description="Number of times the newsletter has been revised.")
     sent_timestamp: Optional[datetime] = Field(None, description="Timestamp when the newsletter was sent.")
-
-# In newsletter_models.py
-if __name__ == "__main__":
-    article = NewsletterArticle(
-        title="New LangGraph Feature",
-        summary="LangGraph released a new conditional edge feature...",
-        url="https://langchain.com/blog/new-langgraph-feature",
-        category="Agent Spotlight"
-    )
-    section = NewsletterSection(name="Top Insights", articles=[article])
-    outline = NewsletterOutline(
-        introduction_points=["Welcome to this week's digest."],
-        sections=[section]
-    )
-    newsletter = Newsletter(
-        subject="Test Newsletter",
-        content_markdown="## Test Newsletter\n\n- New Feature: LangGraph",
-        is_approved=False
-    )
-    print("Models loaded successfully!")
-    print(newsletter.model_dump_json(indent=2)) # Using model_dump_json for Pydantic v2+
