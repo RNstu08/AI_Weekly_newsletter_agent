@@ -1,32 +1,23 @@
 import json
-import re # For robust JSON parsing in case LLM adds filler
+import re
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
 from src.config import get_settings
 from src.utils import logger
-from src.tools.llm_interface import get_default_llm # Our LLM interface
-from src.models.newsletter_models import NewsletterOutline, Newsletter, NewsletterSection, NewsletterArticle # New models
+from src.tools.llm_interface import get_default_llm
+from src.models.newsletter_models import NewsletterOutline, Newsletter # Ensure all models are imported, as you correctly noted
+# from src.models.newsletter_models import NewsletterOutline, Newsletter, NewsletterSection, NewsletterArticle # Already imported from above, but good to be explicit for clarity
 from src.prompts.generation_prompts import GENERATION_PROMPT
-from src.state import AgentState # Our shared state definition
+from src.state import AgentState
 
-# Load application settings
 settings = get_settings()
-
-# Initialize the LLM for this agent
 generation_llm = get_default_llm()
 
 def generation_agent_node(state: AgentState) -> AgentState:
-    """
-    Newsletter Generation Agent node: Takes the structured outline and
-    generates the full newsletter content in Markdown format.
-    - Uses an LLM to expand the outline into a complete newsletter.
-    - Creates the Newsletter object with subject and markdown content.
-    - Updates the 'newsletter_draft' field in the state.
-    """
     logger.info("---GENERATION AGENT: Starting newsletter content generation---")
-
     newsletter_outline: Optional[NewsletterOutline] = state.get('newsletter_outline')
+    
     if not newsletter_outline:
         logger.error("GENERATION AGENT: No newsletter outline found in state. Cannot generate newsletter.")
         new_state = state.copy()
@@ -40,9 +31,7 @@ def generation_agent_node(state: AgentState) -> AgentState:
         )
         return new_state
     
-    # Prepare the outline for the LLM prompt (convert to JSON string)
     newsletter_outline_json_str = newsletter_outline.model_dump_json(indent=2)
-    
     current_date_formatted = datetime.now().strftime('%Y-%m-%d')
 
     try:
@@ -53,58 +42,76 @@ def generation_agent_node(state: AgentState) -> AgentState:
         )
         response_content = generation_llm.invoke(prompt)
 
-        # The LLM is instructed to give *only* markdown content.
-        # However, sometimes LLMs still wrap it in markdown code blocks or add preamble.
-        # We need to strip any common markdown code block wrappers if present.
-        # Check if it starts with a common markdown block for code or general conversation
-        if response_content.strip().startswith("```markdown"):
-            content_markdown = response_content.strip()[len("```markdown"):]
-            if content_markdown.strip().endswith("```"):
-                content_markdown = content_markdown.strip()[:-len("```")]
-        elif response_content.strip().startswith("```"): # Generic code block
-            content_markdown = response_content.strip()[len("```"):]
-            if content_markdown.strip().endswith("```"):
-                content_markdown = content_markdown.strip()[:-len("```")]
-        else:
-            content_markdown = response_content.strip() # Assume it's already clean markdown
-
-        # Extract subject line - assume first line is subject, or look for specific pattern
-        subject_line_prefix = settings.NEWSLETTER_SUBJECT_PREFIX.strip()
-        # Regex to find a line starting with subject prefix, case-insensitive, possibly with ## or #
-        subject_match = re.search(r"^(#+\s*)?" + re.escape(subject_line_prefix) + r".*$", content_markdown, re.MULTILINE | re.IGNORECASE)
+        # --- MORE ROBUST MARKDOWN AND SUBJECT EXTRACTION ---
         
-        generated_subject = f"{subject_line_prefix}{current_date_formatted} Updates" # Default fallback
+        # 1. Attempt to extract subject first, as it might appear anywhere at the beginning
+        generated_subject = f"{settings.NEWSLETTER_SUBJECT_PREFIX}{current_date_formatted} Updates" # Default fallback
+
+        # Pattern to find a subject line potentially at the very start of the response,
+        # or inside markdown headings, possibly with our prefix.
+        # This will look for a line that contains the prefix, possibly at the start of the string or after newlines.
+        # We capture the line itself.
+        subject_line_prefix_escaped = re.escape(settings.NEWSLETTER_SUBJECT_PREFIX.strip())
+        subject_match = re.search(
+            r"(^|\n)(#+\s*)?(" + subject_line_prefix_escaped + r".*)$", 
+            response_content, 
+            re.MULTILINE | re.IGNORECASE
+        )
+        
         if subject_match:
-            full_subject_line = subject_match.group(0).strip()
-            # Remove markdown headings like "## "
+            full_subject_line = subject_match.group(3).strip() # Capture group 3 contains the actual subject text after our prefix
+            # Remove Markdown heading characters if present (e.g., "## ")
             generated_subject = re.sub(r"^#+\s*", "", full_subject_line).strip()
-            # Ensure it starts with the desired prefix if not already
-            if not generated_subject.startswith(subject_line_prefix):
-                generated_subject = f"{subject_line_prefix}{generated_subject}"
             
-            # Remove the subject line from the content_markdown
-            content_markdown = content_markdown.replace(full_subject_line, "", 1).strip()
+            # Ensure it starts with the desired prefix if not already
+            if not generated_subject.startswith(settings.NEWSLETTER_SUBJECT_PREFIX.strip()):
+                generated_subject = f"{settings.NEWSLETTER_SUBJECT_PREFIX.strip()}{generated_subject}"
+            
             logger.info(f"GENERATION AGENT: Extracted subject line: '{generated_subject}'")
         else:
-            logger.warning("GENERATION AGENT: Could not extract subject line from LLM response. Using fallback.")
+            logger.warning("GENERATION AGENT: Could not extract specific subject line from LLM response. Using fallback.")
             
-        # Optional: Further cleanup of content_markdown if LLM added any other preamble/postamble
-        # For instance, if it started with "Here is your newsletter:"
-        content_markdown = re.sub(r"^(Here is your newsletter:|Sure, here is your newsletter:)\s*\n*", "", content_markdown, flags=re.IGNORECASE).strip()
+        # 2. Extract content markdown, removing code blocks and preamble
+        content_markdown = response_content.strip()
+
+        # Remove common preamble phrases from LLMs at the start
+        preamble_patterns = [
+            r"^Here is the generated newsletter content in Markdown format:[\n\s]*",
+            r"^Here is the analysis of the article:[\n\s]*", # From previous agent's debug output
+            r"^Here is your newsletter:[\n\s]*",
+            r"^Sure, here is your newsletter:[\n\s]*",
+            r"^(```json\s*\{.*?\}(```)?)\s*\n*", # Remove any leftover JSON blocks from earlier debugging
+            r"^(```markdown)?\s*\n*", # Remove ```markdown or ``` at the very start
+            r"^\s*Subject:.*?\n+", # Remove subject line if it was at the very start and we already extracted it
+            r"^(AI Agent Weekly Digest:.*?\n)+" # Remove fallback subject line if it was also included by LLM
+        ]
+        for pattern in preamble_patterns:
+            content_markdown = re.sub(pattern, "", content_markdown, flags=re.IGNORECASE | re.DOTALL).strip()
+        
+        # Remove ``` at the end if present (from the markdown block)
+        if content_markdown.endswith("```"):
+            content_markdown = content_markdown[:-len("```")].strip()
+        
+        # Remove the extracted subject line from the main content, only if it still exists there
+        # This prevents duplication if the LLM wrote it inside the markdown body
+        if generated_subject.strip() in content_markdown:
+             # Try to remove the first occurrence of the subject line from content markdown
+             content_markdown = content_markdown.replace(generated_subject.strip(), "", 1).strip()
+             # Also remove markdown headers if subject was part of a header, like "## Subject"
+             content_markdown = re.sub(r"^(#+\s*)?" + re.escape(generated_subject.strip()) + r"\n*", "", content_markdown, flags=re.MULTILINE).strip()
 
 
         newsletter_draft = Newsletter(
             date=datetime.now(),
-            subject=generated_subject,
+            subject=generated_subject, # Use the extracted/fallback subject
             content_markdown=content_markdown,
-            is_approved=False, # Will be set by Editorial Agent
+            is_approved=False,
             revision_attempts=state.get('revision_attempts', 0)
         )
         logger.info("---GENERATION AGENT: Successfully generated newsletter draft.---")
 
     except Exception as e:
         logger.error(f"GENERATION AGENT: Error during LLM invocation or content parsing: {e}", exc_info=True)
-        # Fallback for critical generation failure
         newsletter_draft = Newsletter(
             date=datetime.now(),
             subject=f"{settings.NEWSLETTER_SUBJECT_PREFIX} Generation Failed",
@@ -114,7 +121,6 @@ def generation_agent_node(state: AgentState) -> AgentState:
             is_approved=False
         )
 
-    # Update the state with the newsletter draft
     new_state = state.copy()
     new_state['newsletter_draft'] = newsletter_draft
     return new_state
