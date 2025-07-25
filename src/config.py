@@ -1,52 +1,57 @@
-# src/config.py (Full code for clarity)
 import os
 from functools import lru_cache
-from pydantic import BaseSettings # <<< Changed for Pydantic v1.x
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List, Optional
 
-try:
-    import streamlit as st
-except ImportError:
-    st = None 
-
 class Settings(BaseSettings):
-    class Config: # <<< Changed for Pydantic v1.x
-        env_file = '.env'
-        @classmethod
-        def customise_sources(
-            cls,
-            init_settings,
-            env_settings,
-            file_secret_settings,
-        ):
-            return (
-                init_settings,
-                st_secrets_settings_factory,
-                env_settings,
-                file_secret_settings,
-            )
+    """
+    Application settings loaded from environment variables or .env file.
+    """
+    model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 
-    LLM_PROVIDER: str = "huggingface"
+    # LLM Settings
+    LLM_PROVIDER: str = "ollama"  # or "huggingface"
     OLLAMA_BASE_URL: str = "http://localhost:11434"
-    OLLAMA_MODEL_NAME: str = "llama3" 
-    HF_API_TOKEN: Optional[str] = None
-    HF_MODEL_NAME: Optional[str] = "mistralai/Mistral-7B-Instruct-v0.2" 
-    NEWSLETTER_RECIPIENTS: str = "your_recipient_email@example.com"
-    NEWSLETTER_SENDER_EMAIL: str = "your_sender_email@example.com"
-    NEWSLETTER_SUBJECT_PREFIX: str = "AI Agent Weekly Digest: "
-    RESEARCH_KEYWORDS: str = "AI agent development, multi-agent systems, autonomous agents, langchain, langgraph, crewai, agentic workflows, LLM agents"
-    RESEARCH_RSS_FEEDS: str = "https://news.ycombinator.com/rss,https://techcrunch.com/feed/"
-    RESEARCH_MAX_ARTICLES_PER_RUN: int = 20
-    MAX_SUMMARY_LENGTH: int = 300
-    MAX_ARTICLE_CHUNK_SIZE: int = 4000
-    EDITORIAL_MIN_QUALITY_SCORE: float = 0.7
-    EDITORIAL_MAX_REVISION_ATTEMPTS: int = 2
-    WEEKLY_SEND_DAY: str = "Friday"
-    WEEKLY_SEND_TIME: str = "10:00"
+    OLLAMA_MODEL_NAME: str = "llama3" # e.g., "llama3", "mistral"
+    HF_API_TOKEN: Optional[str] = None # For HuggingFaceHub
+    HF_MODEL_NAME: Optional[str] = None # e.g., "google/flan-t5-xxl"
 
-def get_research_keywords_list(self) -> List[str]:
-    return [k.strip() for k in self.RESEARCH_KEYWORDS.split(',') if k.strip()]
-def get_research_rss_feeds_list(self) -> List[str]:
-    return [f.strip() for f in self.RESEARCH_RSS_FEEDS.split(',') if f.strip()]
-def get_newsletter_recipients_list(self) -> List[str]:
-    return [r.strip() for r in self.NEWSLETTER_RECIPIENTS.split(',') if r.strip()]
+    # API Keys
+    SERPER_API_KEY: Optional[str] = None
+    SENDGRID_API_KEY: Optional[str] = None
+
+    # Research Agent Settings
+    RESEARCH_KEYWORDS: str = "AI agent development, multi-agent systems, agentic workflows, LangChain agents, CrewAI, AutoGen"
+    RESEARCH_RSS_FEEDS: str = "https://www.theverge.com/rss/index.xml,https://techcrunch.com/feed/,https://rss.arxiv.org/rss/cs" # Example RSS feeds
+    RESEARCH_MAX_ARTICLES_PER_RUN: int = 15
+
+    # Extraction Agent Settings
+    # Renamed from EXTRACTION_MAX_SUMMARY_LENGTH to MAX_SUMMARY_LENGTH as seen in error
+    MAX_SUMMARY_LENGTH: int = 500
+    # Added MAX_ARTICLE_CHUNK_SIZE
+    MAX_ARTICLE_CHUNK_SIZE: int = 4000 # Typical chunk size for LLM context window, adjust as needed
+
+    # Editorial Agent Settings
+    EDITORIAL_MIN_QUALITY_SCORE: float = 0.75
+    EDITORIAL_MAX_REVISION_ATTEMPTS: int = 2
+
+    # Newsletter Delivery Settings
+    NEWSLETTER_SENDER_EMAIL: str = "your_sender_email@example.com"
+    NEWSLETTER_RECIPIENTS: str = "your_recipient_email@example.com" # Comma-separated
+    NEWSLETTER_SUBJECT_PREFIX: str = "AI Agent Weekly Digest:"
+
+    def get_research_keywords_list(self) -> List[str]:
+        return [k.strip() for k in self.RESEARCH_KEYWORDS.split(',') if k.strip()]
+
+    def get_research_rss_feeds_list(self) -> List[str]:
+        return [f.strip() for f in self.RESEARCH_RSS_FEEDS.split(',') if f.strip()]
+
+    def get_newsletter_recipients_list(self) -> List[str]:
+        return [r.strip() for r in self.NEWSLETTER_RECIPIENTS.split(',') if r.strip()]
+
+@lru_cache()
+def get_settings() -> Settings:
+    """
+    Returns a cached instance of the Settings class.
+    """
+    return Settings()
