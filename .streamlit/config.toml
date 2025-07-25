@@ -1,0 +1,3 @@
+[runner]
+# Use Python 3.12 for compatibility with pydantic-core
+python_version = "3.12"
