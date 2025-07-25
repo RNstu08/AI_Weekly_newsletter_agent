@@ -149,7 +149,7 @@ NEWSLETTER_HTML_TEMPLATE = """
 </head>
 <body>
     <div class="header-section">
-        <h1>The AI Agent Weekly Digest</h1>
+        <h1>The AI Weekly Newsletter Agent</h1>
         <p class="date-info">{current_date_header}</p>
     </div>
     <div class="container">
