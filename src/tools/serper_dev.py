@@ -4,6 +4,7 @@ from src.config import get_settings
 from src.utils import logger
 from typing import Dict, List, Any, Type # Import Type
 from pydantic import BaseModel, Field # Import BaseModel and Field
+from src.config import get_settings # <--- This is correct here
 
 # Load settings to get the API key
 settings = get_settings()

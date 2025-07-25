@@ -19,7 +19,7 @@ class RSSParserTool:
             limit (Optional[int]): Maximum number of articles to return.
         Returns:
             List[Dict[str, Any]]: A list of dictionaries, each representing an article
-                                  with 'title', 'link', 'summary', 'published'.
+                                 with 'title', 'link', 'summary', 'published'.
         """
         logger.info(f"Attempting to parse RSS feed: {url}")
         articles = []

@@ -3,12 +3,14 @@ from typing import List, Dict, Any, TypedDict
 from datetime import datetime
 
 from src.config import get_settings
-from src.utils import logger
+from src.utils import logger, save_state_to_json, DATA_DIR
 from src.tools.serper_dev import serper_search_tool # Our web search tool
 from src.tools.rss_parser import rss_parser_tool_instance # Our RSS parser
 from src.tools.arxiv_search import arxiv_search_tool_instance # Our arXiv search tool
 from src.models.research_models import RawArticle # Our Pydantic model for raw articles
-from src.state import AgentState
+from src.state import AgentState # Re-import AgentState to ensure consistency
+from src.utils import save_state_to_json 
+
 
 # Load application settings
 settings = get_settings()
@@ -138,3 +140,44 @@ if __name__ == "__main__":
     if not updated_state['raw_articles']:
         print("\nNo articles fetched. Please check .env configuration for API keys, RSS feeds, and keywords.")
         print("Ensure Ollama/HuggingFace LLM is running for other steps, though not directly used by this node yet.")
+
+if __name__ == "__main__":
+    print("--- Testing Research Agent Node (Standalone) ---")
+    
+    # Initialize a dummy state with all required keys from AgentState
+    # Ensure all fields are present, even if empty, for Pydantic/TypedDict compatibility
+    initial_state: AgentState = {
+        "raw_articles": [],
+        "summarized_content": [],
+        "newsletter_outline": None,
+        "newsletter_draft": None,
+        "revision_needed": False,
+        "revision_attempts": 0,
+        "newsletter_sent": False, 
+        "delivery_report": None,  
+        "recipients": [],         
+    }
+
+    # Run the research agent node
+    updated_state = research_agent_node(initial_state)
+
+    print(f"\nTotal articles fetched: {len(updated_state['raw_articles'])}")
+    for i, article in enumerate(updated_state['raw_articles'][:5]): # Print first 5 for review
+        print(f"\nArticle {i+1}:")
+        print(f"Title: {article.title}")
+        print(f"URL: {article.url}")
+        print(f"Source: {article.source}")
+        print(f"Content (snippet): {article.content[:200]}...") # Limit content output
+    
+    if not updated_state['raw_articles']:
+        print("\nNo articles fetched. Please check .env configuration for API keys, RSS feeds, and keywords.")
+        print("Ensure Ollama/HuggingFace LLM is running for other steps, though not directly used by this node yet.")
+    
+    # --- Save raw_articles for next stage testing ---
+    if updated_state['raw_articles']:
+        # We'll save just the raw_articles list. AgentState is a TypedDict.
+        # save_state_to_json expects a dict, and it will handle Pydantic models.
+        save_state_to_json({"raw_articles": updated_state['raw_articles']}, "raw_articles_state.json", DATA_DIR)
+        print(f"\nSaved raw_articles to {DATA_DIR / 'raw_articles_state.json'}")
+    else:
+        print("\nNo raw articles to save.")

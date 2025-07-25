@@ -41,7 +41,7 @@ CURATION_SCORING_PROMPT = ChatPromptTemplate.from_messages(
     ]
 )
 
-# Prompt for structuring the newsletter outline
+# Prompt for structuring the newsletter outline (REFINEMENT for POPULATION & CONTENT)
 CURATION_OUTLINE_PROMPT = ChatPromptTemplate.from_messages(
     [
         (
@@ -51,21 +51,49 @@ CURATION_OUTLINE_PROMPT = ChatPromptTemplate.from_messages(
             "based on provided summarized articles. Group articles by category. "
             "Identify overarching themes or trends for the introduction and conclusion. "
             "Ensure the newsletter feels comprehensive and valuable."
+            "You MUST generate a JSON object that strictly conforms to the `NewsletterOutline` Pydantic model schema. "
+            "All top-level fields (introduction_points, sections, conclusion_points, overall_trends) must be included and **MUST be populated with relevant content; do NOT leave lists empty if articles exist that meet the relevance criteria.** "
+            "Titles, summaries, and URLs for articles in sections must be **directly extracted from the provided summarized content and placed into their respective fields without modification.**"
+            "Ensure categories for articles match one of the `Available Categories` or default to 'Miscellaneous'."
+            "Prioritize populating sections with articles that have high relevance. If an article's category is vague, assign it to a logical specific category if possible, or 'Miscellaneous' if no specific fit."
+            "DO NOT duplicate articles across sections. Place each article in its *most relevant* single section."
+            "Introduction points, conclusion points, and overall trends MUST be informed by the actual article topics provided. Do NOT fabricate or reuse unrelated/generic points. Summarize concisely from the content."
+            "If you were provided 3 or more articles in the summarized_articles_json, at least one section in your generated outline MUST contain at least one article. The 'sections' array MUST NOT be empty unless NO articles were selected/provided."
+            "Do NOT truncate your output. Ensure that the entire JSON structure is complete and valid, regardless of total length."
+            "The URLs in the 'articles' within sections MUST be the exact original URLs provided in the summarized_articles_json. Do NOT put '#' or any other placeholder."
         ),
         (
             "human",
             "Here are the summarized and categorized articles selected for this week's newsletter:\n\n"
             "{summarized_articles_json}\n\n" # Expecting a JSON string of SummarizedContent objects
-            "Please generate a structured outline for the newsletter. Include:\n"
-            "1. An introduction with 2-3 key points/highlights for the week.\n"
-            "2. Sections for each category that has articles, with clear headings and a list of articles for each (title, summary, URL).\n"
-            "3. A conclusion with 1-2 key takeaways or forward-looking statements.\n"
-            "4. A list of overall emerging trends from the week's news.\n\n"
-            "Format your response as a JSON object matching the `NewsletterOutline` Pydantic model schema. "
-            "Example of expected structure (omit articles content for brevity, just show the structure):\n"
+            "Available Categories: {categories}\n\n" # Passed from Python
+            "Please generate a structured outline for the newsletter. Your response MUST be a JSON object "
+            "matching the `NewsletterOutline` Pydantic model schema. Populate ALL fields. "
+            "The structure is as follows:\n"
             "```json\n"
-            "{{ \"introduction_points\": [\"...\"], \"sections\": [{{ \"name\": \"Category Name\", \"articles\": [{{ \"title\": \"...\", \"summary\": \"...\", \"url\": \"...\", \"category\": \"...\"}}]}}], \"conclusion_points\": [\"...\"], \"overall_trends\": [\"...\"] }}\n"
-            "```"
+            "{{ \n"
+            "  \"date\": \"YYYY-MM-DDTHH:MM:SS.sssZ\", \n"
+            "  \"introduction_points\": [\"Clearly state the main highlights and purpose of this week's digest. Max 3 concise points. Based on articles.\"],\n"
+            "  \"sections\": [\n"
+            "    {{\n"
+            "      \"name\": \"Category Name (from Available Categories, e.g., New Frameworks & Tools)\",\n"
+            "      \"articles\": [\n"
+            "        {{\n"
+            "          \"title\": \"Article Title (exact from provided summarized_articles_json)\",\n"
+            "          \"summary\": \"Article summary (exact from provided summarized_articles_json)\",\n"
+            "          \"url\": \"Original URL (exact from provided summarized_articles_json) - ABSOLUTELY CRITICAL: DO NOT CHANGE OR OMIT URL\",\n" # <-- STRONGLY EMPHASIZE URL
+            "          \"category\": \"Assigned Category (from Available Categories)\"\n"
+            "        }}\n"
+            "      ] \n"
+            "    }}\n"
+            "  ],\n"
+            "  \"conclusion_points\": [\"Summarize key takeaways and look ahead. Max 2 concise points. Based on articles.\"],\n"
+            "  \"overall_trends\": [\"List 2-3 overarching trends from the week's news. Based on articles.\"]\n"
+            "}}\n"
+            "```\n"
+            "Your entire response MUST be only the JSON object, no other text or markdown fences outside it. "
+            "**Ensure the 'sections' array contains objects, and each section's 'articles' array contains article objects. These arrays MUST NOT be empty if there are relevant articles to include from the input.**"
+            "**Crucial: Only include each selected article ONCE in its MOST relevant section. AVOID DUPLICATES.**"
         ),
     ]
 )

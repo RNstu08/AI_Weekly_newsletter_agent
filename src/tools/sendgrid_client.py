@@ -4,7 +4,7 @@ from sendgrid.helpers.mail import Mail, Email
 from src.config import get_settings
 from src.utils import logger
 from typing import List
-from datetime import datetime 
+from datetime import datetime
 
 settings = get_settings()
 
@@ -61,7 +61,7 @@ sendgrid_client_instance = SendGridClient()
 if __name__ == "__main__":
     # Ensure SENDGRID_API_KEY, NEWSLETTER_SENDER_EMAIL, NEWSLETTER_RECIPIENTS are set in .env
     # For testing, ensure NEWSLETTER_RECIPIENTS contains YOUR OWN EMAIL ADDRESS
-    # as SendGrid often restricts sending to unverified recipients in free/dev tiers.
+    # as SendGrid restricts sending to unverified recipients in free/dev tiers.
     
     test_recipients = settings.get_newsletter_recipients_list()
     test_subject = "Test AI Agent Newsletter - Phase 3 Step 1"

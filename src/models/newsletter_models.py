@@ -9,7 +9,7 @@ class NewsletterArticle(BaseModel):
     title: str = Field(..., description="Title for the newsletter entry.")
     summary: str = Field(..., description="The generated summary for the newsletter.")
     url: str = Field(..., description="URL to the original source.")
-    category: str = Field(..., description="Category this article belongs to (e.g., 'Top Insights', 'Agent Spotlight').")
+    category: str = Field(..., description="Category this article belongs to (e.g., 'Top Insights', 'Agent Spotlight').") # Category is required as Curation Agent ensures one
 
 class NewsletterSection(BaseModel):
     """
@@ -35,7 +35,7 @@ class Newsletter(BaseModel):
     date: datetime = Field(default_factory=datetime.now, description="Date of the newsletter.")
     subject: str = Field(..., description="Subject line for the email.")
     content_markdown: str = Field(..., description="Full newsletter content in Markdown format.")
-    content_html: str = Field(..., description="Full newsletter content in HTML format, derived from markdown.") # <--- CHANGED FROM Optional[str] = None
+    content_html: Optional[str] = Field(None, description="Full newsletter content in HTML format, derived from markdown.") # <--- CHANGED BACK TO Optional[str] = Field(None, ...)
     is_approved: bool = Field(False, description="Whether the newsletter has been approved by the Editorial Agent.")
     approval_score: Optional[float] = Field(None, description="Quality score from the Editorial Agent.")
     feedback: Optional[str] = Field(None, description="Feedback from the Editorial Agent if not approved.")

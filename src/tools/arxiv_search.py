@@ -36,7 +36,7 @@ class ArxivSearchTool:
             root = ET.fromstring(response.content)
             
             # Arxiv XML namespace
-            ns = {'atom': 'http://www.w3.org/2005/Atom', 
+            ns = {'atom': 'http://www.w3.org/2005/Atom',
                   'arxiv': 'http://arxiv.org/schemas/atom'}
 
             for entry in root.findall('atom:entry', ns):

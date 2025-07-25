@@ -1,6 +1,6 @@
 from typing import List, Optional, TypedDict
 from src.models.research_models import RawArticle, SummarizedContent
-from src.models.newsletter_models import NewsletterOutline, Newsletter # Import other models as we add them
+from src.models.newsletter_models import NewsletterOutline, Newsletter
 
 class AgentState(TypedDict):
     """
