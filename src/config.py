@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file='.env', extra='ignore')
 
     # LLM Settings
-    LLM_PROVIDER: str = "ollama"  # or "huggingface"
+    LLM_PROVIDER: str = "huggingface"#"ollama"  # or "huggingface"
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL_NAME: str = "llama3" # e.g., "llama3", "mistral"
     HF_API_TOKEN: Optional[str] = None # For HuggingFaceHub
